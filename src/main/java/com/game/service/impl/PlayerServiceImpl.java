@@ -41,7 +41,6 @@ public class PlayerServiceImpl implements PlayerService {
         return (int) playerRepository.count(PlayerFilters.createFiltersFromParams(params));
     }
 
-    // TODO: create filter by params
     @Override
     public List<Player> getPlayers(Map<String, String> params, String order) {
         Integer pageNumber = 0;
@@ -67,5 +66,22 @@ public class PlayerServiceImpl implements PlayerService {
                 PageRequest.of(pageNumber, pageSize, Sort.by(order)))
                 .stream()
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        if (playerRepository.existsById(id)) {
+            playerRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Player getPlayer(Long id) {
+        if (playerRepository.existsById(id))
+            return playerRepository.findById(id).get();
+        else
+            return null;
     }
 }

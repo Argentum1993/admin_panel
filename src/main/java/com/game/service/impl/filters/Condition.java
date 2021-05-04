@@ -6,23 +6,23 @@ import java.util.stream.Collectors;
 
 public class Condition {
     private String field;
-    private List<Object> values;
+    private Object value;
     private TypeValue typeValue;
     private Comparison comparison;
 
-    public Condition(TypeValue typeValue, Comparison comparison, String field, Object ...values){
+    public Condition(TypeValue typeValue, Comparison comparison, String field, Object value){
         this.typeValue = typeValue;
         this.comparison = comparison;
         this.field = field;
-        this.values = Arrays.stream(values).collect(Collectors.toList());
+        this.value = value;
     }
 
     public String getField() {
         return field;
     }
 
-    public List<Object> getValues() {
-        return values;
+    public Object getValue() {
+        return value;
     }
 
     public TypeValue getTypeValue() {
