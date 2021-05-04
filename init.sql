@@ -24,6 +24,8 @@ CREATE TABLE player
     ENGINE = InnoDB
     DEFAULT CHARACTER SET = utf8;
 
+SET NAMES utf8;
+
 INSERT INTO player(name, title, race, profession, birthday, banned, experience, level, untilNextLevel)
 VALUES ('Ниус', 'Приходящий Без Шума', 'HOBBIT', 'ROGUE', '2010-10-12', false, 58347, 33, 1153)
      , ('Никрашш', 'НайтВульф', 'ORC', 'WARLOCK', '2010-02-14', false, 174403, 58, 2597)
