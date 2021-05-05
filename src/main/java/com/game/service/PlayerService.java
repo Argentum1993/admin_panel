@@ -12,5 +12,6 @@ public interface PlayerService {
     List<Player>    getPlayers(Map<String, String> params, String order);
     Integer         count(Map<String, String> params);
     Player          getPlayer(Long id);
+    Player          create(Player player);
     boolean         delete(Long id);
 }

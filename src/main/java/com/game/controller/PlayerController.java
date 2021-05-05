@@ -63,4 +63,12 @@ public class PlayerController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping(value = "/rest/players")
+    public ResponseEntity<Player> create(@RequestBody Player player){
+        final Player playerEntity = playerService.create(player);
+        return playerEntity != null
+                ? new ResponseEntity<>(playerEntity, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
 }
