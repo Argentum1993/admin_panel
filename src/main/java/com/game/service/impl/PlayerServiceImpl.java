@@ -86,39 +86,92 @@ public class PlayerServiceImpl implements PlayerService {
         player.setLevel(level);
         player.setUntilNextLevel(calculateUntilNextLevel(level, experience));
 
-        player.setId(0l);
         player = playerRepository.save(player);
         return player;
     }
 
+    @Override
+    public Player update(Long id, Player updates) {
+        Player player = getPlayer(id);
+
+        if (player != null){
+            if (updates.getName() != null)
+                player.setName(updates.getName());
+            if (updates.getTitle() != null)
+                player.setTitle(updates.getTitle());
+            if (updates.getRace() != null)
+                player.setRace(updates.getRace());
+            if (updates.getProfession() != null)
+                player.setProfession(updates.getProfession());
+            if (updates.getBirthday() != null)
+                player.setBirthday(updates.getBirthday());
+            if (updates.getBanned() != null)
+                player.setBanned(updates.getBanned());
+            if (updates.getExperience() != null){
+                Integer exp = updates.getExperience();
+                player.setExperience(exp);
+                player.setLevel(calculateLevel(exp));
+                player.setUntilNextLevel(calculateUntilNextLevel(player.getLevel(), exp));
+            }
+            return playerRepository.save(player);
+        }
+        return null;
+    }
+
     private Integer calculateLevel(Integer experience){
-        return (int) Math.round((Math.sqrt(2500 + 200 * experience) - 50) / 100);
+        return (int) (Math.sqrt(2500 + 200 * experience) - 50) / 100;
     }
 
     private Integer calculateUntilNextLevel(Integer level, Integer experience){
         return 50 * (level + 1) * (level + 2) - experience;
     }
 
+    @Override
+    public boolean validUpdates(Player updates){
+        if (updates.getName() != null && !validName(updates.getName()))
+            return false;
+        if (updates.getTitle() != null && !validTitle(updates.getTitle()))
+            return false;
+        if (updates.getBirthday() != null && !validBirthday(updates.getBirthday()))
+            return false;
+        if (updates.getExperience() != null && !validExperience(updates.getExperience()))
+            return false;
+        return true;
+    }
+
     private boolean validRawPlayer(Player player){
-        if (player.getName() == null || player.getName().isEmpty() || player.getName().length() > 12)
+        if (!validName(player.getName()) || !validTitle(player.getTitle())
+                || player.getRace() == null || player.getProfession() == null
+                || !validBirthday(player.getBirthday()) || !validExperience(player.getExperience()))
             return false;
-        if (player.getTitle() == null || player.getTitle().length() > 30)
-            return false;
-        if (player.getRace() == null)
-            return false;
-        if (player.getProfession() == null)
-            return false;
+        return true;
+    }
 
+    private boolean validName(String name){
+        if (name == null || name.isEmpty() || name.length() > 12)
+            return false;
+        return true;
+    }
 
+    private boolean validTitle(String title){
+        if (title == null || title.length() > 30)
+            return false;
+        return true;
+    }
+
+    private boolean validBirthday(Date birthday){
         Calendar calendar = Calendar.getInstance();
-        Date birthday = player.getBirthday();
         calendar.set(Calendar.YEAR, 2000);
         Date minDate = calendar.getTime();
         calendar.set(Calendar.YEAR, 3000);
         Date maxDate = calendar.getTime();
         if (birthday == null || birthday.before(minDate) || birthday.after(maxDate))
             return false;
-        if (player.getExperience() == null || player.getExperience() < 0 || player.getExperience() >10_000_000)
+        return true;
+    }
+
+    private boolean validExperience(Integer experience){
+        if (experience == null || experience < 0 || experience > 10_000_000)
             return false;
         return true;
     }

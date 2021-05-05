@@ -42,6 +42,7 @@ public class PlayerInfoTest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlayerInfoTest that = (PlayerInfoTest) o;
+
         return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(title, that.title) &&

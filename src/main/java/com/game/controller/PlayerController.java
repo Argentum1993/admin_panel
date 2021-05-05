@@ -71,4 +71,18 @@ public class PlayerController {
                 : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping(value = "/rest/players/{id}")
+    public ResponseEntity<Player> update(@PathVariable("id") Long id, @RequestBody Player updates){
+        Player playerEntity = null;
+
+        if (playerService.validUpdates(updates) && id > 0)
+            playerEntity = playerService.update(id, updates);
+        else
+            return new ResponseEntity<>(playerEntity, HttpStatus.BAD_REQUEST);
+
+        return playerEntity != null
+                ? new ResponseEntity<>(playerEntity, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
 }
